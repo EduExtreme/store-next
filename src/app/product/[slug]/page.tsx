@@ -4,6 +4,7 @@ import { ProductImages } from "./components/product-images";
 import { ProductInfo } from "./components/product-info";
 import { computeProductTotalPrice } from "@/helpers/products";
 import { ProductList } from "@/components/ui/product-list";
+import { SectionTitle } from "@/components/ui/section-title";
 interface ProductDetailsPageProps {
   params: {
     slug: string;
@@ -40,7 +41,10 @@ export default async function ProductDetailsPage({
       <div className="px-5">
         <ProductInfo product={computeProductTotalPrice(product)} />
       </div>
-      <ProductList products={product.category.products} />
+      <div>
+        <SectionTitle>Produtos Recomendados</SectionTitle>
+        <ProductList products={product.category.products} />
+      </div>
     </figure>
   );
 }
