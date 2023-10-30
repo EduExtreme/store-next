@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
+import { ComponentProps } from "react";
 
-interface SectionTitleProps {
-  children: ReactNode;
-}
-
-export function SectionTitle({ children }: SectionTitleProps) {
-  return <p className="mb-2 pl-5 font-semibold uppercase">{children}</p>;
+export function SectionTitle({ children, ...props }: ComponentProps<"p">) {
+  return (
+    <p className="mb-2 pl-5 font-semibold uppercase" {...props}>
+      {children}
+    </p>
+  );
 }
