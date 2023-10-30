@@ -26,7 +26,6 @@ const categoryIcon = {
 export function CategoryItem({ category }: CategoryItemProps) {
   return (
     <Link href={`/category/${category.slug}`}>
-      {" "}
       <Badge
         variant="outline"
         className="flex items-center justify-center gap-2 py-3"
