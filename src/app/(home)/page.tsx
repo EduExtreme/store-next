@@ -1,10 +1,11 @@
 import Image from "next/image";
 
 import { prismaClient } from "@/lib/prisma";
-import { ProductList } from "./components/product-list";
+
 import { SectionTitle } from "./components/section-title";
 import { PromoBanner } from "./components/promo-banner";
 import { Categories } from "./components/categories";
+import { ProductList } from "@/components/ui/product-list";
 
 export default async function Home() {
   const deals = await prismaClient.product.findMany({

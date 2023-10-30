@@ -76,8 +76,8 @@ export function ProductInfo({
               Envio para <span className="font-bold">todo o Brasil</span>
             </p>
           </div>
-          <p className="text-xs font-bold">Frete Grátis</p>
         </div>
+        <p className="text-xs font-bold">Frete Grátis</p>
       </div>
     </div>
   );
