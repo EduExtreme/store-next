@@ -1,7 +1,7 @@
 "use client";
 
 import { ProductWithTotalPrice } from "@/helpers/products";
-import { Product } from "@prisma/client";
+
 import { ReactNode, createContext, useState } from "react";
 
 export interface CartProduct extends ProductWithTotalPrice {
@@ -14,13 +14,18 @@ interface ICartContext {
   cartBasePrice: number;
   cartTotalDiscount: number;
   addProductsToCart: (product: CartProduct) => void;
+  decreaseProductQuantity: (productId: string) => void;
+  increaseProductQuantity: (productId: string) => void;
 }
+
 export const CartContext = createContext<ICartContext>({
   products: [],
   cartTotalPrice: 0,
   cartBasePrice: 0,
   cartTotalDiscount: 0,
   addProductsToCart: () => {},
+  decreaseProductQuantity: () => {},
+  increaseProductQuantity: () => {},
 });
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -47,6 +52,39 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     setProducts((prev) => [...prev, product]);
   }
+
+  function decreaseProductQuantity(productId: string) {
+    setProducts((prev) =>
+      prev
+        .map((cartProduct) => {
+          if (cartProduct.id === productId) {
+            return {
+              ...cartProduct,
+              quantity: cartProduct.quantity - 1,
+            };
+          }
+          return cartProduct;
+        })
+        .filter((cartProduct) => cartProduct.quantity > 0),
+    );
+  }
+
+  function increaseProductQuantity(productId: string) {
+    setProducts((prev) =>
+      prev
+        .map((cartProduct) => {
+          if (cartProduct.id === productId) {
+            return {
+              ...cartProduct,
+              quantity: cartProduct.quantity + 1,
+            };
+          }
+          return cartProduct;
+        })
+        .filter((cartProduct) => cartProduct.quantity > 0),
+    );
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -55,6 +93,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         cartBasePrice: 0,
         cartTotalDiscount: 0,
         addProductsToCart,
+        decreaseProductQuantity,
+        increaseProductQuantity,
       }}
     >
       {children}
