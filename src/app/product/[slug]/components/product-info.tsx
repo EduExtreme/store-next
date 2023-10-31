@@ -1,6 +1,7 @@
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DiscountBadge } from "@/components/ui/discount-badge";
 import { ProductWithTotalPrice } from "@/helpers/products";
 import { Product } from "@prisma/client";
 import {
@@ -37,10 +38,10 @@ export function ProductInfo({
       <div className="flex items-center gap-2">
         <h1>R${totalPrice.toFixed(2)}</h1>
         {discountPercentage > 0 && (
-          <Badge className="px-2 py-[2px]">
+          <DiscountBadge>
             <ArrowDownIcon size={14} />
             {discountPercentage}%
-          </Badge>
+          </DiscountBadge>
         )}
       </div>
       {discountPercentage > 0 && (
