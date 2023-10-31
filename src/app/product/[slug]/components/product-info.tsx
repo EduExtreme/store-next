@@ -1,4 +1,5 @@
 "use client";
+import { CartContext } from "@/Providers/cart";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DiscountBadge } from "@/components/ui/discount-badge";
@@ -12,17 +13,14 @@ import {
   ThumbsUpIcon,
   TruckIcon,
 } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 interface ProductInfoProps {
-  product: Pick<
-    ProductWithTotalPrice,
-    "basePrice" | "description" | "discountPercentage" | "name" | "totalPrice"
-  >;
+  product: ProductWithTotalPrice;
 }
-export function ProductInfo({
-  product: { basePrice, description, discountPercentage, name, totalPrice },
-}: ProductInfoProps) {
+export function ProductInfo({ product }: ProductInfoProps) {
   const [quantity, setQuantity] = useState(1);
+
+  const { addProductsToCart } = useContext(CartContext);
 
   function handleDecreaseQuantity() {
     setQuantity((prev) => (prev === 1 ? prev : prev - 1));
@@ -32,21 +30,26 @@ export function ProductInfo({
     setQuantity((prev) => prev + 1);
   }
 
+  function addItemsToCart() {
+    addProductsToCart({ ...product, quantity });
+    console.log("add ?");
+  }
+
   return (
     <div className="flex flex-col">
-      <h2 className="text-2xl font-bold">{name}</h2>
+      <h2 className="text-2xl font-bold">{product.name}</h2>
       <div className="flex items-center gap-2">
-        <h1>R${totalPrice.toFixed(2)}</h1>
-        {discountPercentage > 0 && (
+        <h1>R${product.totalPrice.toFixed(2)}</h1>
+        {product.discountPercentage > 0 && (
           <DiscountBadge>
             <ArrowDownIcon size={14} />
-            {discountPercentage}%
+            {product.discountPercentage}%
           </DiscountBadge>
         )}
       </div>
-      {discountPercentage > 0 && (
+      {product.discountPercentage > 0 && (
         <p className="text-sm line-through opacity-75">
-          R${Number(basePrice).toFixed(2)}
+          R${Number(product.basePrice).toFixed(2)}
         </p>
       )}
 
@@ -62,9 +65,13 @@ export function ProductInfo({
 
       <div className="mt-8 flex flex-col gap-3">
         <h3 className="font-bold">Descrição</h3>
-        <p className="text-justify  text-sm opacity-60">{description}</p>
+        <p className="text-justify  text-sm opacity-60">
+          {product.description}
+        </p>
       </div>
-      <Button className="mt-8 font-bold uppercase">Adcionar ao carrinho</Button>
+      <Button className="mt-8 font-bold uppercase" onClick={addItemsToCart}>
+        Adcionar ao carrinho
+      </Button>
 
       <div className="mt-8 flex items-center justify-between rounded-lg bg-accent px-5 py-2">
         <div className="flex items-center gap-3">
