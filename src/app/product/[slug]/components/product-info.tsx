@@ -32,7 +32,6 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
   function addItemsToCart() {
     addProductsToCart({ ...product, quantity });
-    console.log("add ?");
   }
 
   return (

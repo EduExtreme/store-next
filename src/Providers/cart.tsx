@@ -2,7 +2,7 @@
 
 import { ProductWithTotalPrice } from "@/helpers/products";
 
-import { ReactNode, createContext, useState } from "react";
+import { ReactNode, createContext, useMemo, useState } from "react";
 
 export interface CartProduct extends ProductWithTotalPrice {
   quantity: number;
@@ -10,12 +10,16 @@ export interface CartProduct extends ProductWithTotalPrice {
 
 interface ICartContext {
   products: CartProduct[];
+  total: number;
+  subTotal: number;
+  totalDiscount: number;
   cartTotalPrice: number;
   cartBasePrice: number;
   cartTotalDiscount: number;
   addProductsToCart: (product: CartProduct) => void;
   decreaseProductQuantity: (productId: string) => void;
   increaseProductQuantity: (productId: string) => void;
+  removeProductFromCart: (productId: string) => void;
 }
 
 export const CartContext = createContext<ICartContext>({
@@ -23,18 +27,35 @@ export const CartContext = createContext<ICartContext>({
   cartTotalPrice: 0,
   cartBasePrice: 0,
   cartTotalDiscount: 0,
+  total: 0,
+  subTotal: 0,
+  totalDiscount: 0,
   addProductsToCart: () => {},
   decreaseProductQuantity: () => {},
   increaseProductQuantity: () => {},
+  removeProductFromCart: () => {},
 });
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<CartProduct[]>([]);
+  const subTotal = useMemo(() => {
+    return products.reduce((acc, product) => {
+      return acc + Number(product.basePrice);
+    }, 0);
+  }, [products]);
+
+  const total = useMemo(() => {
+    return products.reduce((acc, product) => {
+      return acc + product.totalPrice;
+    }, 0);
+  }, [products]);
+
+  const totalDiscount = total - subTotal;
 
   function addProductsToCart(product: CartProduct) {
-    const hasSameProductOnCart = products.some(
-      (cartProduct) => cartProduct.id === product.id,
-    );
+    const hasSameProductOnCart = products.some((cartProduct) => {
+      return cartProduct.id === product.id;
+    });
 
     if (hasSameProductOnCart) {
       setProducts((prev) =>
@@ -45,12 +66,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
               quantity: cartProduct.quantity + product.quantity,
             };
           }
+
           return cartProduct;
         }),
       );
+    } else {
+      setProducts((prev) => [...prev, product]);
     }
-
-    setProducts((prev) => [...prev, product]);
   }
 
   function decreaseProductQuantity(productId: string) {
@@ -85,6 +107,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   }
 
+  function removeProductFromCart(productId: string) {
+    console.log(productId);
+    setProducts((prev) =>
+      prev.filter((cartProduct) => {
+        cartProduct.id === productId;
+      }),
+    );
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -95,6 +126,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         addProductsToCart,
         decreaseProductQuantity,
         increaseProductQuantity,
+        removeProductFromCart,
+        total,
+        subTotal,
+        totalDiscount,
       }}
     >
       {children}
