@@ -28,6 +28,8 @@ model Product {
   discountPercentage Int @default(0)
 }
 
+
+
 model Account {
   id                 String  @id @default(cuid())
   userId             String
