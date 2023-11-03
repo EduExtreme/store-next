@@ -3,9 +3,10 @@ import Image from "next/image";
 import { prismaClient } from "@/lib/prisma";
 
 import { PromoBanner } from "./components/promo-banner";
-import Categories from "./components/categories";
+
 import { ProductList } from "@/components/ui/product-list";
 import { SectionTitle } from "@/components/ui/section-title";
+import Categories from "./components/Categories";
 
 export default async function Home() {
   const deals = await prismaClient.product.findMany({
