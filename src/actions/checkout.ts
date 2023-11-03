@@ -8,6 +8,8 @@ export async function createCheckout (products:CartProduct[]) {
     apiVersion:"2023-10-16"
   })
 
+  
+
   const checkout = await stripe.checkout.sessions.create({
     payment_method_types:["card"],
     mode:"payment",

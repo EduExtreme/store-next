@@ -20,6 +20,8 @@ export function Cart() {
     stripe?.redirectToCheckout({
       sessionId: checkout.id,
     });
+
+    
   }
 
   return (
